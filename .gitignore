@@ -8,3 +8,8 @@ out
 gen
 
 venv
+
+korean_bert.onnx
+korean_bert.zip
+*.json
+vocab.txt

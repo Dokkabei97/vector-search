@@ -9,7 +9,7 @@ services:
       - discovery.seed_hosts=opensearch02,opensearch03
       - bootstrap.memory_lock=true
       - node.roles=master,data,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
@@ -29,8 +29,8 @@ services:
       - node.name=opensearch02
       - discovery.seed_hosts=opensearch01,opensearch03
       - bootstrap.memory_lock=true
-      - node.roles=data,ingest,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
+      - node.roles=master,data,ingest,ml
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
@@ -50,8 +50,8 @@ services:
       - node.name=opensearch03
       - discovery.seed_hosts=opensearch01,opensearch02
       - bootstrap.memory_lock=true
-      - node.roles=data,ingest,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
+      - node.roles=master,data,ingest,ml
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
