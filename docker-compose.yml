@@ -74,16 +74,16 @@ services:
     depends_on:
       - opensearch01
 
-  minio:
-    image: minio/minio:latest
-    container_name: minio
-    environment:
-      - MINIO_ROOT_USER=miniodocker
-      - MINIO_ROOT_PASSWORD=minio123
-      - TZ=Asia/Seoul
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - ./minio/data:/data
-    command: server /data --console-address ":9001"
+#  minio:
+#    image: minio/minio:latest
+#    container_name: minio
+#    environment:
+#      - MINIO_ROOT_USER=miniodocker
+#      - MINIO_ROOT_PASSWORD=minio123
+#      - TZ=Asia/Seoul
+#    ports:
+#      - "9000:9000"
+#      - "9001:9001"
+#    volumes:
+#      - ./minio/data:/data
+#    command: server /data --console-address ":9001"
