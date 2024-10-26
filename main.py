@@ -231,6 +231,7 @@ def index_document(client, tokenizer, model, index_name, doc):
 def search(client, tokenizer, model, query, index_name, k=3):
     # 쿼리 임베딩 생성
     query_vector = get_embedding(tokenizer, model, query).tolist()
+    print(f"Query Vector: {query_vector}")
 
     # 검색 쿼리 작성
     search_query = {
@@ -259,13 +260,13 @@ def main():
     model_name = "klue/bert-base"
     onnx_model_path = "korean_bert.onnx"
     model_zip_path = "korean_bert.zip"
-    # convert_model_to_onnx(model_name, model_zip_path, opset_version=14)
+    convert_model_to_onnx(model_name, model_zip_path, opset_version=14)
 
     # 2. 모델 ZIP 파일의 SHA256 체크섬 계산
-    # model_content_size_in_bytes = os.path.getsize(model_zip_path)
-    # model_content_hash_value = calculate_sha256(model_zip_path)
-    # print(f"Model ZIP Size: {model_content_size_in_bytes} bytes")
-    # print(f"Model ZIP SHA256: {model_content_hash_value}")
+    model_content_size_in_bytes = os.path.getsize(model_zip_path)
+    model_content_hash_value = calculate_sha256(model_zip_path)
+    print(f"Model ZIP Size: {model_content_size_in_bytes} bytes")
+    print(f"Model ZIP SHA256: {model_content_hash_value}")
 
     # 3. OpenSearch 클라이언트 설정
     client = setup_opensearch_client()
@@ -280,7 +281,7 @@ def main():
 
     # 5. 모델 등록
     # 호스팅된 모델 ZIP 파일 URL 설정
-    model_zip_url = "https://github.com/Dokkabei97/vector-search/releases/download/vector-model/korean_bert.zip"  # 실제 호스팅된 URL로 변경
+    model_zip_url = "http://minio:9001/api/v1/download-shared-object/aHR0cDovLzEyNy4wLjAuMTo5MDAwL21vZGVsL2tvcmVhbl9iZXJ0LnppcD9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPVM5WVBDMUFYODNLTDkxSlRZT0lLJTJGMjAyNDEwMjYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQxMDI2VDA3MjY0NlomWC1BbXotRXhwaXJlcz00MzIwMCZYLUFtei1TZWN1cml0eS1Ub2tlbj1leUpoYkdjaU9pSklVelV4TWlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKaFkyTmxjM05MWlhraU9pSlRPVmxRUXpGQldEZ3pTMHc1TVVwVVdVOUpTeUlzSW1WNGNDSTZNVGN5T1RrM01ERTJOU3dpY0dGeVpXNTBJam9pYldsdWFXOWtiMk5yWlhJaWZRLlZQcHh6RGZ2b000czdSelB3c3dvaFctWUJzS0g3QVZHSFpxM0F5dHEyakVWU3R5dHlPaS1WQ1dpUHdlSmczNVpvX2xRdndxT1o3aFY0cTRSQXVvcFRBJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZ2ZXJzaW9uSWQ9bnVsbCZYLUFtei1TaWduYXR1cmU9N2EzNDA3MmYzYTU2MWM5MTViNTEzNmI3NTlkODQzMmIyOGNjYjgxNDg1YWZlOWQ1OWJmYmUwOTFmNTMwN2JmOA"  # 실제 호스팅된 URL로 변경
 
     task_id = register_model(
         client,
@@ -290,8 +291,8 @@ def main():
         model_group_id=model_group_id,
         description="Korean BERT ONNX model",
         function_name="TEXT_EMBEDDING",
-        model_content_size_in_bytes="443756946",
-        model_content_hash_value="1098f7a1608d01a6db6f4fe9b7b3314390a3454c7abf3ad51b8982a868375482",
+        model_content_size_in_bytes=f"{model_content_size_in_bytes}",
+        model_content_hash_value=f"{model_content_hash_value}",
         model_config={
             "model_type": "bert",
             "embedding_dimension": 768,
@@ -343,7 +344,7 @@ def main():
 
     doc = {
         "shopName": "백소정",
-        "location": "대륭포스타 타워6차 1층",
+        "location": "대륭포스트 타워6차 1층",
         "menu": [
             {"name": "등심 돈까스", "price": 12900},
             {"name": "안심 돈까스", "price": 13900},
