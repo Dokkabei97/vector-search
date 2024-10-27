@@ -8,7 +8,7 @@ services:
       - node.name=opensearch01
       - discovery.seed_hosts=opensearch02,opensearch03
       - bootstrap.memory_lock=true
-      - node.roles=master,data,ml
+      - node.roles=master,data,ingest,ml
       - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
@@ -66,7 +66,7 @@ services:
     image: opensearchproject/opensearch-dashboards:2.17.1
     container_name: dashboard
     environment:
-      - 'OPENSEARCH_HOSTS=["http://opensearch01:9200"]'
+      - 'OPENSEARCH_HOSTS=["http://opensearch01:9200", "http://opensearch02:9201", "http://opensearch03:9202"]'
       - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ports:
@@ -74,16 +74,16 @@ services:
     depends_on:
       - opensearch01
 
-#  minio:
-#    image: minio/minio:latest
-#    container_name: minio
-#    environment:
-#      - MINIO_ROOT_USER=miniodocker
-#      - MINIO_ROOT_PASSWORD=minio123
-#      - TZ=Asia/Seoul
-#    ports:
-#      - "9000:9000"
-#      - "9001:9001"
-#    volumes:
-#      - ./minio/data:/data
-#    command: server /data --console-address ":9001"
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=miniodocker
+      - MINIO_ROOT_PASSWORD=minio123
+      - TZ=Asia/Seoul
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"

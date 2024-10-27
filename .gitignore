@@ -9,7 +9,9 @@ gen
 
 venv
 
-korean_bert.onnx
-korean_bert.zip
+*.onnx
+*.zip
 *.json
 vocab.txt
+
+/minio
