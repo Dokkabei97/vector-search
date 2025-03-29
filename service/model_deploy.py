@@ -6,15 +6,18 @@ from config.opensearch_config import setup_opensearch_client
 
 # 모델 ZIP 파일의 SHA256 체크섬 계산
 def calculate_sha256(file_path):
+    print('============== calculate_sha256 ============== ')
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
         for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
+    print(f'SHA256: {sha256_hash.hexdigest()}')
     return sha256_hash.hexdigest()
 
 
 # 클러스터 설정 변경
 def cluster_settings(client):
+    print('============== cluster_settings ============== ')
     settings = {
         "persistent": {
             "plugins.ml_commons.allow_registering_model_via_url": "true",
@@ -30,6 +33,7 @@ def cluster_settings(client):
 
 # 모델 그룹 생성
 def create_model_group(client, name, description):
+    print('============== create_model_group ============== ')
     model_group_request = {
         "name": f"{name}-15",
         "description": description,
@@ -51,6 +55,7 @@ def create_model_group(client, name, description):
 # 5. 모델 등록
 def register_model(client, name, version, description, model_format, model_group_id, model_content_hash_value,
                    model_config, model_url):
+    print('============== register_model ============== ')
     model_register_request = {
         "name": name,
         "version": version,  # 문자열 형태
@@ -79,6 +84,7 @@ def register_model(client, name, version, description, model_format, model_group
 
 # 6. 모델 등록 작업 완료 대기 및 model_id 추출
 def get_model_id_from_task(client, task_id):
+    print('============== get_model_id_from_task ============== ')
     status_url = f"/_plugins/_ml/tasks/{task_id}"
     max_attempts = 10
     attempt = 0
@@ -117,6 +123,7 @@ def get_model_id_from_task(client, task_id):
 
 # 7. 모델 배포
 def deploy_model(client, model_id):
+    print('============== deploy_model ============== ')
     deploy_response = client.transport.perform_request(
         method='POST',
         url=f"/_plugins/_ml/models/{model_id}/_deploy",
@@ -173,7 +180,7 @@ def main():
     )
 
     # 5. 모델 등록
-    model_zip_url = "http://localhost:9001/api/v1/download-shared-object/aHR0cDovLzEyNy4wLjAuMTo5MDAwL3NoYXJlZC1vYmplY3Qva2JlcnQuemlwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QU5XUkczTzhQV1dBRDlIRUUxMzMlMkYyMDI0MTAyOCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDEwMjhUMTIyMTE5WiZYLUFtei1FeHBpcmVzPTQzMTk5JlgtQW16LVNlY3VyaXR5LVRva2VuPWV5SmhiR2NpT2lKSVV6VXhNaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpoWTJObGMzTkxaWGtpT2lKQlRsZFNSek5QT0ZCWFYwRkVPVWhGUlRFek15SXNJbVY0Y0NJNk1UY3pNREUxTlRVMU1Td2ljR0Z5Wlc1MElqb2liV2x1YVc5a2IyTnJaWElpZlEuRDBLZ0lFMy1YNFJsMnFQblBOZzNUeW5EOG5KYk9ZYzFyUk5XOExzLW1KRU9sMEc5UmF5OHZuT25wc0d4Ql80VWlYcFZqYU1TQWtQWGM4cUllT2pJYlEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnZlcnNpb25JZD1udWxsJlgtQW16LVNpZ25hdHVyZT1hNjJmMTVjNmU2NmVmMzQ3MmUxZGU5MzBmNzM3N2FkMmVkMzM3ODRjNTExMjVlMTQ2NGQzMjdjYTA2NjA2M2Vl"
+    model_zip_url = "http://localhost:9001/api/v1/download-shared-object/aHR0cDovLzEyNy4wLjAuMTo5MDAwL3NoYXJlZC1vYmplY3Qva2JlcnQuemlwP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9ODRXNjkyREMySjAwS1NNNlpUM0QlMkYyMDI1MDMyMyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTAzMjNUMDYxMjQzWiZYLUFtei1FeHBpcmVzPTQzMTk5JlgtQW16LVNlY3VyaXR5LVRva2VuPWV5SmhiR2NpT2lKSVV6VXhNaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpoWTJObGMzTkxaWGtpT2lJNE5GYzJPVEpFUXpKS01EQkxVMDAyV2xRelJDSXNJbVY0Y0NJNk1UYzBNamMxTURZd09Td2ljR0Z5Wlc1MElqb2liV2x1YVc5a2IyTnJaWElpZlEuZ0ZiTjRLUDBoLWJEa0J6T3hpUFlCNzRxWlhwSkRTWnQyeXc4bjg2dHpNc2lkRVdLZ2s4eWVWeUJkaHpEeVktSVc3ZkxtekNxN3dPbHZBUDctY0Zha2cmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnZlcnNpb25JZD1udWxsJlgtQW16LVNpZ25hdHVyZT1jMmUwYmJlOWJhNjRlZThiNzQ1OGQ2YjkwNjJmNmUxZDM1Y2U3OWZkYjUzNjBiZDE0YTFjMzc0NGYwYTI4MGZj"
 
     task_id = register_model(
         client,

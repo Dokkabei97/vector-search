@@ -4,12 +4,12 @@ services:
     container_name: opensearch01
     environment:
       - cluster.name=opensearch-cluster
-      - cluster.initial_master_nodes=opensearch01
+      - cluster.initial_master_nodes=opensearch01,opensearch02,opensearch03
       - node.name=opensearch01
       - discovery.seed_hosts=opensearch02,opensearch03
       - bootstrap.memory_lock=true
       - node.roles=master,data,ingest,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
@@ -25,12 +25,12 @@ services:
     container_name: opensearch02
     environment:
       - cluster.name=opensearch-cluster
-      - cluster.initial_master_nodes=opensearch01
+      - cluster.initial_master_nodes=opensearch01,opensearch02,opensearch03
       - node.name=opensearch02
       - discovery.seed_hosts=opensearch01,opensearch03
       - bootstrap.memory_lock=true
       - node.roles=master,data,ingest,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
@@ -46,12 +46,12 @@ services:
     container_name: opensearch03
     environment:
       - cluster.name=opensearch-cluster
-      - cluster.initial_master_nodes=opensearch01
+      - cluster.initial_master_nodes=opensearch01,opensearch02,opensearch03
       - node.name=opensearch03
       - discovery.seed_hosts=opensearch01,opensearch02
       - bootstrap.memory_lock=true
       - node.roles=master,data,ingest,ml
-      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "OPENSEARCH_JAVA_OPTS=-Xms2g -Xmx2g"
       - "DISABLE_SECURITY_PLUGIN=true"
       - 'TZ=Asia/Seoul'
     ulimits:
