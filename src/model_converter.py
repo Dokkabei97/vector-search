@@ -13,12 +13,12 @@ import torch
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- 설정 변경 부분 ---
-# 사용할 모델 이름 변경
-model_name = 'klue/bert-base'
+# 사용할 모델 이름 변경 (파인 튜닝된 로컬 모델 경로)
+model_name = './fine_tuned_model'
 # 출력될 ONNX 파일 이름
-onnx_filename = "klue_bert_base.onnx"
+onnx_filename = "korean_finetuned.onnx"
 # 출력될 ZIP 파일 이름
-zip_filename = "klue_bert_base.zip"
+zip_filename = "korean_finetuned.zip"
 # ZIP 파일 저장 경로 (상위 디렉토리의 model 폴더)
 zip_output_path = os.path.join("..", "model", zip_filename)
 # --- 설정 변경 끝 ---
